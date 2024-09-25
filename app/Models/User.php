@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Couchbase\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'login',
+        'phone',
+        'role_id',
+        'subscription_id'
     ];
 
     /**
@@ -42,6 +47,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'subscription_id' => 'integer',
+            'role_id' => 'integer',
         ];
+    }
+    public function role(){
+        return $this->belongsTo(Role::class);
+    }
+    public function subscription(){
+            return $this->belongsTo(Subsciption::class);
     }
 }
