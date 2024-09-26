@@ -2,26 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Validation\Rule;
-use App\Models\Subscription;
-use App\Models\User;
-use App\Models\Role;
 use App\Models\SubscriptionType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
 
 class SubscriptionTypeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $subscriptionTypes = SubscriptionType::all();
-        } catch (\Exception $e) {
-            // Можна обробити помилку, якщо потрібно
-            return back()->withErrors(['error' => 'Не вдалося отримати типи підписки.']);
-        }
+        $query = $request->input('query');
+
+        $subscriptionTypes = SubscriptionType::when($query, function ($q) use ($query) {
+            return $q->where('type', 'like', "%{$query}%");
+        })->get();
+
         return view('admin.subscriptionTypes.index', compact('subscriptionTypes'));
     }
 
@@ -35,12 +28,12 @@ class SubscriptionTypeController extends Controller
         $validatedData = $request->validate([
             'type' => 'required|unique:subscription_types,type',
             'price' => 'required|numeric',
-            'features' => 'required',
+            'features' => 'nullable|string',
         ]);
 
         SubscriptionType::create($validatedData);
 
-        return redirect()->route('admin.subscriptionTypes.index')->with('success', 'Тип підписки додано успішно');
+        return redirect()->route('admin.subscriptionTypes.index')->with('success', 'Тип підписки успішно створено');
     }
 
     public function edit($id)
@@ -54,17 +47,14 @@ class SubscriptionTypeController extends Controller
         $subscriptionType = SubscriptionType::findOrFail($id);
 
         $validatedData = $request->validate([
-            'type' => [
-                'required',
-                Rule::unique('subscription_types')->ignore($subscriptionType->id),
-            ],
+            'type' => 'required|unique:subscription_types,type,' . $subscriptionType->id,
             'price' => 'required|numeric',
-            'features' => 'required',
+            'features' => 'nullable|string',
         ]);
 
         $subscriptionType->update($validatedData);
 
-        return redirect()->route('admin.subscriptionTypes.index')->with('success', 'Тип підписки оновлено успішно');
+        return redirect()->route('admin.subscriptionTypes.index')->with('success', 'Тип підписки успішно оновлено');
     }
 
     public function destroy($id)
@@ -72,6 +62,17 @@ class SubscriptionTypeController extends Controller
         $subscriptionType = SubscriptionType::findOrFail($id);
         $subscriptionType->delete();
 
-        return redirect()->route('admin.subscriptionTypes.index')->with('success', 'Тип підписки видалено успішно');
+        return redirect()->route('admin.subscriptionTypes.index')->with('success', 'Тип підписки успішно видалено');
+    }
+
+    public function filter(Request $request)
+    {
+        $query = $request->input('query');
+
+        $subscriptionTypes = SubscriptionType::when($query, function ($q) use ($query) {
+            return $q->where('type', 'like', "%{$query}%");
+        })->get();
+
+        return response()->json(['subscriptionTypes' => $subscriptionTypes]);
     }
 }

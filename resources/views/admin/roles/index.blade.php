@@ -3,7 +3,7 @@
 @section('content')
     <div class="container" style="max-width: 1400px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Типи підписок</h1>
+            <h1 class="mb-0">Список ролей</h1>
             <a href="" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left"></i> Повернутися на головну
             </a>
@@ -11,8 +11,8 @@
 
         <div class="row mb-4">
             <div class="col-md-4 d-flex align-items-end">
-                <a href="{{ route('admin.subscriptionTypes.create') }}" class="btn btn-success" style="width: 260px; white-space: nowrap;">
-                    <i class="fas fa-plus"></i> Додати новий тип підписки
+                <a href="{{ route('admin.roles.create') }}" class="btn btn-success" style="width: 260px; white-space: nowrap;">
+                    <i class="fas fa-plus"></i> Додати нову роль
                 </a>
             </div>
 
@@ -24,36 +24,31 @@
                     </span>
                 </div>
             </div>
-        </div>
 
-        <div id="no-results" class="alert alert-info" style="display: none; text-align: center;">
-            Типів підписок не знайдено.
         </div>
 
         <div class="table-responsive" style="max-height: 605px; overflow-y: auto;">
             <table class="table table-bordered" style="background-color: #ffffff;">
                 <thead class="thead-light">
                 <tr>
-                    <th>Тип</th>
-                    <th>Ціна</th>
-                    <th>Фічі</th>
+                    <th>ID</th>
+                    <th>Назва ролі</th>
                     <th>Дії</th>
                 </tr>
                 </thead>
-                <tbody id="subscriptionTypes-table-body">
-                @foreach ($subscriptionTypes as $subscriptionType)
+                <tbody id="roles-table-body">
+                @foreach ($roles as $role)
                     <tr>
-                        <td>{{ $subscriptionType->type }}</td>
-                        <td>{{ $subscriptionType->price }}</td>
-                        <td>{{ $subscriptionType->features }}</td>
+                        <td>{{ $role->id }}</td>
+                        <td>{{ $role->name }}</td>
                         <td>
-                            <a href="{{ route('admin.subscriptionTypes.edit', $subscriptionType) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-warning">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('admin.subscriptionTypes.destroy', $subscriptionType) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete('{{ $subscriptionType->type }}')">
+                            <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 10px;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити цю роль?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -62,43 +57,43 @@
                 @endforeach
                 </tbody>
             </table>
+            <div id="no-results" style="display: none;">Не знайдено результатів.</div>
         </div>
-    </div>
 
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('search');
-            const tableBody = document.getElementById('subscriptionTypes-table-body');
+            const tableBody = document.getElementById('roles-table-body');
             const noResults = document.getElementById('no-results');
 
-            searchInput.addEventListener('input', () => fetchSubscriptionTypes(searchInput.value));
+            searchInput.addEventListener('input', () => fetchRoles(searchInput.value));
 
-            function fetchSubscriptionTypes(query) {
-                fetch(`{{ route('admin.subscriptionTypes.filter') }}?query=${encodeURIComponent(query)}`)
+            function fetchRoles(query) {
+                fetch(`{{ route('admin.roles.filter') }}?query=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
-                        updateTable(data.subscriptionTypes);
+                        updateTable(data.roles);
                     })
                     .catch(error => console.error('Error fetching data:', error));
             }
 
-            function updateTable(subscriptionTypes) {
+            function updateTable(roles) {
                 tableBody.innerHTML = '';
-                if (subscriptionTypes.length === 0) {
+                if (roles.length === 0) {
                     noResults.style.display = 'block';
                 } else {
                     noResults.style.display = 'none';
-                    subscriptionTypes.forEach(subscriptionType => {
+                    roles.forEach(role => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                        <td>${subscriptionType.type}</td>
-                        <td>${subscriptionType.price}</td>
-                        <td>${subscriptionType.features}</td>
+                        <td>${role.id}</td>
+                        <td>${role.name}</td>
                         <td>
-                            <a href="{{ url('admin/subscriptionTypes') }}/${subscriptionType.id}/edit" class="btn btn-warning btn-sm">
+                            <a href="{{ url('admin/roles') }}/${role.id}/edit" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ url('admin/subscriptionTypes') }}/${subscriptionType.id}" method="POST" style="display:inline;" onsubmit="return confirmDelete('${subscriptionType.type}')">
+                            <form action="{{ url('admin/roles') }}/${role.id}" method="POST" style="display:inline;" onsubmit="return confirm('Ви впевнені, що хочете видалити цю роль?')">
                                 @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 10px;">
@@ -113,4 +108,7 @@
             }
         });
     </script>
+
+
+
 @endsection
