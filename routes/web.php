@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SubscriptionTypeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TomController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,7 +33,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/subscriptionTypes/filter', [SubscriptionTypeController::class, 'filter'])->name('admin.subscriptionTypes.filter');
 
     //Roles
-    // Роут для відображення списку ролей
     Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
     Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
@@ -41,6 +41,15 @@ Route::prefix('admin')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
     Route::get('/roles/filter', [RoleController::class, 'filter'])->name('admin.roles.filter');
 
+    //toms
+    Route::get('/toms', [TomController::class, 'index'])->name('admin.toms.index');
+    Route::get('/toms/create', [TomController::class, 'create'])->name('admin.toms.create');
+    Route::post('/toms', [TomController::class, 'store'])->name('admin.toms.store');
+    Route::get('/toms/{tom}/edit', [TomController::class, 'edit'])->name('admin.toms.edit');
+    Route::put('/toms/{tom}', [TomController::class, 'update'])->name('admin.toms.update');
+    Route::delete('/toms/{tom}', [TomController::class, 'destroy'])->name('admin.toms.destroy');
+    Route::get('/toms/search', [TomController::class, 'search'])->name('admin.toms.search');
+    Route::get('/toms/filter', [TomController::class, 'filter'])->name('admin.toms.filter');
 
 });
 
