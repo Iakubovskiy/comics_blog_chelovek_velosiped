@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index()
     {
         try{
-            $users = User::with(['role', 'subscription.subscriptionType'])->get();
+            $users = User::with(['role', 'subscription.subscriptionTypes'])->get();
         }
         catch (\Exception $e) {
             $users = User::with(['role'])->get();
@@ -107,37 +107,56 @@ class UserController extends Controller
             'name' => 'required',
             'login' => [
                 'required',
-                Rule::unique('users')->ignore($user->id)->where(function ($query) use ($request) {
-                    return $query->where('login', $request->login);
-                }),
+                Rule::unique('users')->ignore($user->id),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->ignore($user->id)->where(function ($query) use ($request) {
-                    return $query->where('email', $request->email);
-                }),
+                Rule::unique('users')->ignore($user->id),
             ],
             'password' => 'nullable|min:8',
             'phone' => [
                 'required',
-                Rule::unique('users')->ignore($user->id)->where(function ($query) use ($request) {
-                    return $query->where('phone', $request->phone);
-                }),
+                Rule::unique('users')->ignore($user->id),
             ],
             'role_id' => 'required|exists:roles,id',
+            'subscription_type_id' => 'nullable|exists:subscription_types,id',
         ]);
 
+        // Обробка зміни підписки
+        if ($validatedData['subscription_type_id'] !== null) {
+            // Оновлюємо підписку, якщо вона існує
+            if ($user->subscription) {
+                $user->subscription->update([
+                    'subscription_type_id' => $validatedData['subscription_type_id'],
+                    'beginning_date' => now(),
+                    'end_date' => now()->addYear(),
+                ]);
+            } else {
+                // Створюємо нову підписку, якщо її ще немає
+                $subscription = new Subscription([
+                    'subscription_type_id' => $validatedData['subscription_type_id'],
+                    'beginning_date' => now(),
+                    'end_date' => now()->addYear(),
+                ]);
+                $subscription->save();
+                $validatedData['subscription_id'] = $subscription->id;
+            }
+        }
+
+        // Оновлення пароля, якщо він наданий
         if ($request->filled('password')) {
             $validatedData['password'] = Hash::make($request->password);
         } else {
             unset($validatedData['password']);
         }
 
+        // Оновлення користувача
         $user->update($validatedData);
 
         return redirect()->route('admin.users.index')->with('success', 'Користувача оновлено успішно');
     }
+
 
     public function destroy(User $user)
     {
