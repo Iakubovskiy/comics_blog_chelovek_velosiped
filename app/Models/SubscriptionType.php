@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SubscriptionType extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 
     protected $table = 'subscription_types';
 
