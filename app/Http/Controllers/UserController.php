@@ -123,9 +123,7 @@ class UserController extends Controller
             'subscription_type_id' => 'nullable|exists:subscription_types,id',
         ]);
 
-        // Обробка зміни підписки
         if ($validatedData['subscription_type_id'] !== null) {
-            // Оновлюємо підписку, якщо вона існує
             if ($user->subscription) {
                 $user->subscription->update([
                     'subscription_type_id' => $validatedData['subscription_type_id'],
@@ -133,7 +131,6 @@ class UserController extends Controller
                     'end_date' => now()->addYear(),
                 ]);
             } else {
-                // Створюємо нову підписку, якщо її ще немає
                 $subscription = new Subscription([
                     'subscription_type_id' => $validatedData['subscription_type_id'],
                     'beginning_date' => now(),
@@ -143,15 +140,12 @@ class UserController extends Controller
                 $validatedData['subscription_id'] = $subscription->id;
             }
         }
-
-        // Оновлення пароля, якщо він наданий
         if ($request->filled('password')) {
             $validatedData['password'] = Hash::make($request->password);
         } else {
             unset($validatedData['password']);
         }
 
-        // Оновлення користувача
         $user->update($validatedData);
 
         return redirect()->route('admin.users.index')->with('success', 'Користувача оновлено успішно');

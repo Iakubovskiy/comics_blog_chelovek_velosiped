@@ -11,7 +11,6 @@ class RoleController extends Controller
     {
         $query = $request->input('query');
 
-        // Фільтрація ролей
         $roles = Role::when($query, function ($q) use ($query) {
             return $q->where('name', 'like', "%{$query}%");
         })->get();

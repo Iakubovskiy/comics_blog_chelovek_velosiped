@@ -16,8 +16,8 @@ class PostController extends Controller
         $posts = Post::when($query, function ($q) use ($query) {
             return $q->where('title', 'like', "%{$query}%");
         })
-            ->with(['tom', 'chapter']) // Завантажуємо томи та глави
-            ->paginate(10); // Пагінація на 10 постів на сторінку
+            ->with(['tom', 'chapter'])
+            ->paginate(10);
 
         return view('admin.posts.index', compact('posts', 'query'));
     }
