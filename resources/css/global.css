@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    line-height: normal;
+}
+:root {
+    --font-russo-one: 'Russo One';
+    --font-size-5xl: 24px;
+    --color-white: #fff;
+    --padding-3xs-9: 9.9px;
+
+}
