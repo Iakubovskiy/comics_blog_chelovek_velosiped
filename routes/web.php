@@ -75,7 +75,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/posts/filter', [PostController::class, 'filter'])->name('admin.posts.filter');
 
     // admin
-    Route::get('/', [AdminController::class, 'dashboard'])->name('admin');
+        Route::middleware('auth:sanctum')->group( function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('admin');
+        });
 
 });
 
