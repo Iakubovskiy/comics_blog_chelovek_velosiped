@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,15 +9,24 @@ class Tom extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable = [
-        'name'
+        'name',
+        'price',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'double',
+        ];
+    }
 
     public function post(){
         return $this->hasMany(Post::class);
     }
 
-    public function chapter()
+    public function photos()
     {
-        return $this->hasMany(Chapter::class);
+        return $this->belongsToMany(Photo::class, 'tom_images', 'tom_id', 'photo_id')
+                ->withPivot('photo_number');
     }
 }

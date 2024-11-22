@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,7 +23,6 @@ class User extends Authenticatable
         'login',
         'phone',
         'role_id',
-        'subscription_id'
     ];
 
     /**
@@ -48,16 +45,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'subscription_id' => 'integer',
             'role_id' => 'integer',
         ];
     }
+    
     public function role(){
         return $this->belongsTo(Role::class, 'role_id');
     }
-    public function subscription()
-    {
-        return $this->belongsTo(Subscription::class, 'subscription_id');
-    }
 
+    public function toms()
+    {
+        return $this->belongsToMany(Tom::class, 'carts', 'user_id', 'tom_id')
+                    ->withPivot('quantity');
+    }
 }

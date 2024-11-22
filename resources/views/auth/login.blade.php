@@ -23,6 +23,8 @@
 
         <button type="button" class="btn btn-primary w-100" onclick="login()">Увійти</button>
     </form>
+    <br>
+    <p class="text-center"><a href="register.blade.php">SingUp now</a></p>
 </div>
 
 <script>

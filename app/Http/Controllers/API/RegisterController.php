@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
@@ -28,7 +27,7 @@ class RegisterController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors(), code:400);       
         }
 
         $input = $request->all();
@@ -41,11 +40,7 @@ class RegisterController extends BaseController
         return $this->sendResponse($success, 'User register successfully.');
     }
 
-    /**
-     * Login api
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function login(Request $request): JsonResponse
     {
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
@@ -54,9 +49,8 @@ class RegisterController extends BaseController
             $success['name'] =  $user->name;
 
             return $this->sendResponse($success, 'User login successfully.');
-        }
-        else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }else{
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised'], code: 401);
         }
     }
 }

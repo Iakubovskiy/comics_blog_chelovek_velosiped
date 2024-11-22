@@ -67,8 +67,19 @@
                 window.location.href = '/login';
             })
             .catch(error => {
-                console.error(error);
-                alert('Помилка при реєстрації. Перевірте введені дані.');
+                if (error.response && error.response.data && error.response.data.errors) {
+                    // Отримання та форматування повідомлень помилок
+                    const errors = error.response.data.errors;
+                    let errorMessage = 'Помилки при реєстрації:\n';
+                    for (const field in errors) {
+                        if (errors.hasOwnProperty(field)) {
+                            errorMessage += `- ${errors[field].join(', ')}\n`;
+                        }
+                    }
+                    alert(errorMessage);
+                } else {
+                    alert('Сталася невідома помилка. Спробуйте пізніше.');
+                }
             });
     }
 </script>
