@@ -54,8 +54,9 @@ class TomService
             if (!$updated) {
                 throw new Exception("Failed to update tom");
             }
-
+            
             if (!empty($uploadedFiles)) {
+                $this->deleteOldPhotos($tom);
                 $this->handlePhotoUploads($tom, $uploadedFiles);
             }
 
@@ -69,17 +70,31 @@ class TomService
 
     protected function handlePhotoUploads(Tom $tom, array $uploadedFiles): void
     {
-        $photoNumber = $tom->images()->max('photo_number') ?? 0;
+        $uploadedFiles = array_reverse($uploadedFiles);
+        $photoNumber = 1;
         
         foreach ($uploadedFiles as $file) {
-            $photoNumber++;
             $photo = $this->photoService->createPhoto($file);
-            $tom->images()->attach($photo->id, ['photo_number' => $photoNumber]);
+            $tom->photos()->attach($photo->id, ['photo_number' => $photoNumber]);
+            $photoNumber++;
         }
     }
 
     public function deleteTom(int $id): bool
     {
         return $this->repository->delete($id);
+    }
+
+    protected function deleteOldPhotos(Tom $tom): void
+    {
+        $images = $tom->photos;
+        if(!empty($images))
+        {
+            foreach ($images as $image) {
+                dump($image->id);
+                $tom->photos()->detach($image->id);
+                $this->photoService->deletePhoto($image->id);
+            }
+        }
     }
 }

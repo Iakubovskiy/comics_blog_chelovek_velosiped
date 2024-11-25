@@ -1,87 +1,52 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реєстрація</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-<body>
-<div class="container mt-5">
-    <h1 class="text-center">Реєстрація</h1>
-    <form id="registerForm" class="mx-auto" style="max-width: 400px;">
-        <div class="mb-3">
-            <label for="name" class="form-label">Ім'я:</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-        </div>
+@extends('layouts.app')
 
-        <div class="mb-3">
-            <label for="username" class="form-label">Нікнейм</label>
-            <input type="text" class="form-control" id="username" name="username" required>
-        </div>
+@section('content')
+<div class="container">
+    <h1>Реєстрація</h1>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">Електронна пошта:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
+    @endif
 
-        <div class="mb-3">
-            <label for="password" class="form-label">Пароль:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
+    @endif
 
-        <div class="mb-3">
-            <label for="password_confirmation" class="form-label">Підтвердіть пароль:</label>
-            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
+        <div class="form-group">
+            <label for="name">Ім'я</label>
+            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
         </div>
-
-        <div class="mb-3">
-            <label for="phone_number" class="form-label">Номер телефону:</label>
-            <input type="number" class="form-control" id="phone_number" name="phone_number" required>
+        <div class="form-group">
+            <label for="login">Логін</label>
+            <input type="text" name="login" class="form-control" value="{{ old('login') }}" required>
         </div>
-
-        <button type="button" class="btn btn-primary w-100" onclick="register()">Зареєструватися</button>
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="text" name="phone" class="form-control" value="{{ old('phone') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="c_password">Підтвердження паролю</label>
+            <input type="password" name="c_password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Зареєструватися</button>
     </form>
 </div>
-
-<script>
-    function register() {
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const passwordConfirmation = document.getElementById('password_confirmation').value;
-        const phoneNumber = document.getElementById('phone_number').value;
-        const username = document.getElementById('username').value;
-
-        axios.post('/api/register', {
-            name: name,
-            email: email,
-            password: password,
-            c_password: passwordConfirmation,
-            phone: phoneNumber,
-            login:username,
-        })
-            .then(response => {
-                alert('Реєстрація успішна!');
-                window.location.href = '/login';
-            })
-            .catch(error => {
-                if (error.response && error.response.data && error.response.data.errors) {
-                    // Отримання та форматування повідомлень помилок
-                    const errors = error.response.data.errors;
-                    let errorMessage = 'Помилки при реєстрації:\n';
-                    for (const field in errors) {
-                        if (errors.hasOwnProperty(field)) {
-                            errorMessage += `- ${errors[field].join(', ')}\n`;
-                        }
-                    }
-                    alert(errorMessage);
-                } else {
-                    alert('Сталася невідома помилка. Спробуйте пізніше.');
-                }
-            });
-    }
-</script>
-</body>
-</html>
+@endsection

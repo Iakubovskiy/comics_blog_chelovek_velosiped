@@ -1,46 +1,48 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container" style="max-width: 500px; margin: 0 auto; padding-bottom: 50px;">
-        <div class="card" style="box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);">
-            <div class="card-header" style="background-color: #d6d6d6;">
-                <h2>Додавання нового Тома</h2>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('admin.toms.store') }}" method="POST">
-                    @csrf
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <div class="form-group">
-                        <label for="name">Ім'я Тома</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
-                        @error('name')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group text-right">
-                        <button type="submit" class="btn btn-success">Додати Тома</button>
-                        <button type="button" class="btn btn-outline-primary mx-3" id="back-button">
-                            <i class="fas fa-arrow-left"></i> Назад
-                        </button>
-                    </div>
-
-                    <script>
-                        document.getElementById('back-button').addEventListener('click', function() {
-                            window.location.href = "{{ route('admin.toms.index') }}";
-                        });
-                    </script>
-                </form>
-            </div>
+    <h1>Create Tom</h1>
+    <form action="{{ route('admin.toms.store') }}" method="POST" enctype="multipart/form-data" id="tom-form">
+        @csrf
+        <div class="form-group">
+            <label for="name">Назва</label>
+            <input type="text" id="name" name="name" class="form-control" required>
         </div>
-    </div>
+        <div class="form-group">
+            <label for="price">Ціна</label>
+            <input id="price" name="price" class="form-control" type="number" required></input>
+        </div>
+        <div class="form-group">
+            <label for="images">Images</label>
+            <input type="file" id="images" name="images[]" class="form-control" multiple>
+            <div id="preview" class="mt-3"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+    <style>
+        #preview img {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 4px;
+        }
+    </style>
+    
+<script>
+    document.getElementById('images').addEventListener('change', function(event) {
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        Array.from(event.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100px';
+                img.style.marginRight = '10px';
+                img.style.marginBottom = '10px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 @endsection

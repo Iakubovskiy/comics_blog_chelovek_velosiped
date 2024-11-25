@@ -30,6 +30,7 @@ class PhotoService
 
     public function deletePhoto(int $id): bool
     {
+        dump($id);
         $photo = $this->repository->getById($id);
         if (!$photo) {
             throw new Exception("Photo with ID {$id} not found");

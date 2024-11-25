@@ -4,17 +4,15 @@ namespace App\DTO;
 class PostDTO
 {
     public function __construct(
-        public readonly int $userId,
         public readonly string $title,
         public readonly string $description,
-        public readonly ?int $tomId,
+        public readonly ?int $tom_id,
         public readonly array $photos = []
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['user_id'],
             $data['title'],
             $data['description'],
             $data['tom_id'] ?? null,

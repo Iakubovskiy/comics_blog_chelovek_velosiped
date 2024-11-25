@@ -10,20 +10,14 @@ class Post extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id',
         'title',
         'Description',
         'tom_id',
     ];
 
     protected $casts = [
-        'user_id' => 'integer',
         'tom_id' => 'integer',
     ];
-
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
 
     public function tom(){
         return $this->belongsTo(Tom::class);

@@ -1,59 +1,52 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container" style="max-width: 600px; margin: 0 auto;">
-        <div class="card">
-            <div class="card-header">
-                <h2>Додавання нового посту</h2>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('admin.posts.store') }}" method="POST">
-                    @csrf
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <div class="form-group">
-                        <label for="title">Назва посту</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Description">Опис</label>
-                        <textarea class="form-control" id="Description" name="Description" rows="3"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tom_id">Том</label>
-                        <select class="form-control" id="tom_id" name="tom_id" required>
-                            <option value="">Виберіть том</option>
-                            @foreach ($toms as $tom)
-                                <option value="{{ $tom->id }}">{{ $tom->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="chapter_id">Глава</label>
-                        <select class="form-control" id="chapter_id" name="chapter_id" required>
-                            <option value="">Виберіть главу</option>
-                            @foreach ($chapters as $chapter)
-                                <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-success">Додати пост</button>
-                    <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary">Назад</a>
-                </form>
-            </div>
+    <h1>Create Post</h1>
+    <form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data" id="post-form">
+        @csrf
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" class="form-control" required>
         </div>
-    </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="tom_id">Tom ID</label>
+            <input type="number" id="tom_id" name="tom_id" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="images">Images</label>
+            <input type="file" id="images" name="images[]" class="form-control" multiple>
+            <div id="preview" class="mt-3"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+    <style>
+        #preview img {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 4px;
+        }
+    </style>
+    
+<script>
+    document.getElementById('images').addEventListener('change', function(event) {
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        Array.from(event.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100px';
+                img.style.marginRight = '10px';
+                img.style.marginBottom = '10px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 @endsection

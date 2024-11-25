@@ -3,50 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
+    private RoleService $roleService;
+    public function __construct(RoleService $roleService)
+    {
+        $this->roleService = $roleService;
+    }
     public function index()
     {
-        try {
-            $client = new \GuzzleHttp\Client([
-                'base_uri' => 'http://localhost',  
-                'timeout' => 60,
-                'debug' => true,
-                'verify' => false,
-                'headers' => [
-                    'Accept' => 'application/json'
-                ]
-            ]);
-    
-            $response = $client->get('/api/roles');
-            $roles = json_decode($response->getBody()->getContents(), true);
-            
-            return view('admin.roles.index', compact('roles'));
-        } catch (\Exception $e) {
-            dd([
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'previous' => $e->getPrevious() ? $e->getPrevious()->getMessage() : null
-            ]);
-        }
-        //$roles = $response->json();
-
-        //return view('admin.roles.index', compact('roles'));
+        $roles = $this->roleService->getAllRoles();
+        return view('admin.roles.index', compact('roles'));
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|unique:roles,name',
         ]);
 
-        $response = Http::post(env('API_URL') . '/roles', $data);
+        $result = $this->roleService->createRole($data);
 
-        if ($response->successful()) {
+        if ($result) {
             return redirect()->route('admin.roles.index')->with('success', 'Role created successfully');
         }
 
@@ -55,8 +38,11 @@ class RoleController extends Controller
 
     public function edit($id)
     {
-        $response = Http::get(env('API_URL') . '/roles/' . $id);
-        $role = $response->json();
+        $role = $this->roleService->getRoleById($id);
+
+        if (!$role) {
+            return redirect()->route('admin.roles.index')->with('error', 'Role not found');
+        }
 
         return view('admin.roles.edit', compact('role'));
     }
@@ -67,9 +53,9 @@ class RoleController extends Controller
             'name' => 'required|unique:roles,name,' . $id,
         ]);
 
-        $response = Http::put(env('API_URL') . '/roles/' . $id, $data);
+        $result = $this->roleService->updateRole($id, $data);
 
-        if ($response->successful()) {
+        if ($result) {
             return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully');
         }
 
@@ -78,9 +64,9 @@ class RoleController extends Controller
 
     public function delete($id)
     {
-        $response = Http::delete(env('API_URL') . '/roles/' . $id);
+        $result = $this->roleService->deleteRole($id);
 
-        if ($response->successful()) {
+        if ($result) {
             return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully');
         }
 
