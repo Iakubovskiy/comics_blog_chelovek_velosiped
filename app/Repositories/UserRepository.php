@@ -5,7 +5,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use \Illuminate\Database\Eloquent\Model;
 
-class UserRepository
+class UserRepository implements RepositoryInterface
 {
     function getAll(): Collection
     {

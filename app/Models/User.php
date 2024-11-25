@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Models\Role;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -57,5 +58,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Tom::class, 'carts', 'user_id', 'tom_id')
                     ->withPivot('quantity');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(Order::class);
     }
 }

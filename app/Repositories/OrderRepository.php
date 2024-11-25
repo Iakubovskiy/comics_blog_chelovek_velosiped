@@ -1,33 +1,32 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\Role;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
 use \Illuminate\Database\Eloquent\Model;
-use App\Repositories\RepositoryInterface;
 
-class RoleRepository implements RepositoryInterface
+class OrderRepository implements RepositoryInterface
 {
     function getAll(): Collection
     {
-        return Role::all();
+        return Order::all();
     }
     function getById(int $id): Model|null
     {
-        return Role::find($id);
+        return Order::find($id);
     }
     function create(array $data): Model
     {
-        return Role::create($data);
+        return Order::create($data);
     }
     function update(int $id, array $data): Model
     {
-        $role = Role::find($id);
+        $role = Order::find($id);
         $role->update($data);
         return $role;
     }
     function delete(int $id): bool
     {
-        return Role::destroy($id);
+        return Order::destroy($id);
     }
 }

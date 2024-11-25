@@ -5,7 +5,7 @@ use App\Models\Tom;
 use Illuminate\Database\Eloquent\Collection;
 use \Illuminate\Database\Eloquent\Model;
 
-class TomRepository
+class TomRepository implements RepositoryInterface
 {
     function getAll(): Collection
     {

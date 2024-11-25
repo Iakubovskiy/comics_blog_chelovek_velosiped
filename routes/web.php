@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SubscriptionTypeController;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\TomController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\PostController;
@@ -41,7 +41,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
     Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+    Route::delete('/roles/{role}', [RoleController::class, 'delete'])->name('admin.roles.delete');
     Route::get('/roles/filter', [RoleController::class, 'filter'])->name('admin.roles.filter');
 
     //toms
@@ -53,16 +53,6 @@ Route::prefix('admin')->group(function () {
     Route::delete('/toms/{tom}', [TomController::class, 'destroy'])->name('admin.toms.destroy');
     Route::get('/toms/search', [TomController::class, 'search'])->name('admin.toms.search');
     Route::get('/toms/filter', [TomController::class, 'filter'])->name('admin.toms.filter');
-
-    //chapters
-    Route::get('/chapters', [ChapterController::class, 'index'])->name('admin.chapters.index');
-    Route::get('/chapters/create', [ChapterController::class, 'create'])->name('admin.chapters.create');
-    Route::post('/chapters', [ChapterController::class, 'store'])->name('admin.chapters.store');
-    Route::get('/chapters/{chapter}/edit', [ChapterController::class, 'edit'])->name('admin.chapters.edit');
-    Route::put('/chapters/{chapter}', [ChapterController::class, 'update'])->name('admin.chapters.update');
-    Route::delete('/chapters/{chapter}', [ChapterController::class, 'destroy'])->name('admin.chapters.destroy');
-    Route::get('/chapters/search', [ChapterController::class, 'search'])->name('admin.chapters.search');
-    Route::get('/chapters/filter', [ChapterController::class, 'filter'])->name('admin.chapters.filter');
 
     //posts
     Route::get('/posts', [PostController::class, 'index'])->name('admin.posts.index');

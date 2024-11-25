@@ -5,7 +5,8 @@ use App\Models\Photo;
 use Illuminate\Database\Eloquent\Collection;
 use \Illuminate\Database\Eloquent\Model;
 
-class PhotoRepository implements RepositoryInterface{
+class PhotoRepository implements RepositoryInterface
+{
     function getAll(): Collection
     {
         return Photo::all();
