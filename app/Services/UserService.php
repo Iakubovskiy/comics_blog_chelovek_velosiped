@@ -4,19 +4,17 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserService
 {
     protected $repository;
-    
-    public function __construct(RepositoryInterface $repository) {
+
+    public function __construct(RepositoryInterface $repository)
+    {
         $this->repository = $repository;
     }
-
-    // Реєстрація
     public function register(array $data)
     {
         $validator = Validator::make($data, [
@@ -37,44 +35,36 @@ class UserService
         $input['role_id'] = 2;
 
         $user = User::create($input);
-        $token = JWTAuth::fromUser($user);
-        return response()->json(['token' => $token, 'user' => $user], 201);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return ['user' => $user, 'token' => $token];
     }
 
     public function login(array $data)
     {
-        
         $credentials = ['email' => $data['email'], 'password' => $data['password']];
+
         if (!Auth::attempt($credentials)) {
-            return redirect()->back()->withErrors(['error' => 'Невірний логін чи пароль'])->withInput();
+             return ['error' => 'Невірний логін чи пароль'];
         }
 
         $user = Auth::user();
-        $token = JWTAuth::fromUser($user);
-        return response()->json(['success' => 'Ви увійшли в систему!'])
-        ->cookie('jwt_token', $token, 60*24);
-    }
 
-    public function authenticateUser($token)
-    {
-        try {
-            if (!$user = JWTAuth::authenticate($token)) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-            return response()->json(['user' => $user], 200);
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Failed to authenticate token'], 500);
-        }
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return ['user' => $user, 'token' => $token];
     }
 
     public function logout()
     {
-        return redirect()->route('auth.login.view')->with('success', 'Ви вийшли з системи!')->cookie(
-            'jwt_token', 
-            '', 
-            -1
-        );
+        $user = Auth::user();
+
+        if ($user) {
+            $user->tokens()->delete();
+            Cookie::queue(Cookie::forget('XSRF-TOKEN'));
+            Cookie::queue(Cookie::forget('laravel_session'));
+        }
+
+        return redirect()->route('login')->with('success', 'Ви вийшли з системи!');
     }
-
 }
-

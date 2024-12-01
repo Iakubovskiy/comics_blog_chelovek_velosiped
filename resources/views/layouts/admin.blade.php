@@ -25,7 +25,10 @@
                     <a class="nav-link" href="{{ route('admin.roles.index') }}">Ролі</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Вихід</a>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-link nav-link hover:text-teal-200">Вийти</button>
+                    </form>
                 </li>
             </ul>
         </div>

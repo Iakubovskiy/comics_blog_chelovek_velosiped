@@ -8,6 +8,7 @@
         "php": "^8.2",
         "cloudinary/cloudinary_php": "^2.14",
         "google/cloud-storage": "*",
+        "kreait/firebase-php": "^7.10",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",

@@ -1,0 +1,95 @@
+.bg-white {
+    background-color: #fff !important;
+}
+
+.rounded-lg {
+    border-radius: 8px !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Заголовки */
+h1 {
+    font-size: 2rem !important;
+    color: #333;
+}
+
+.font-weight-bold {
+    font-weight: bold !important;
+}
+
+.list-group {
+    margin-top: 1.5rem !important;
+}
+
+.list-group-item {
+    border: 1px solid #ddd !important;
+    padding: 1.25rem 1rem !important;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa !important;
+}
+
+.text-teal-600 {
+    color: #3cbc3c !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+img.object-cover {
+    object-fit: cover !important;
+}
+
+.w-20 {
+    width: 80px !important;
+}
+
+.h-20 {
+    height: 80px !important;
+}
+
+.ml-3 {
+    margin-left: 1rem !important;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545 !important;
+    color: #dc3545 !important;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-teal-600 {
+    color: #3cbc3c !important;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem !important;
+    }
+    .d-flex {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    .list-group-item {
+        flex-direction: column !important;
+    }
+    .w-20 {
+        width: 60px !important;
+    }
+    .h-20 {
+        height: 60px !important;
+    }
+}

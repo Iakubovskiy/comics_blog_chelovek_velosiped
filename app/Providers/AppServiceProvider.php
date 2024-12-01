@@ -16,6 +16,8 @@ use App\Repositories\TomRepository;
 use App\Repositories\UserRepository;
 use App\Services\CloudinaryUploadService;
 use App\Services\Interfaces\FileUploadServiceInterface;
+use Illuminate\Support\Facades\Gate;
+use App\Policies\RolePolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +55,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+    
     }
 }

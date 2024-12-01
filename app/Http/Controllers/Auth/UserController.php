@@ -19,31 +19,37 @@ class UserController extends Controller
     {
         $data = $request->only(['name', 'login', 'email', 'password', 'c_password', 'phone']);
 
-        return $this->userService->register($data);
+        $result = $this->userService->register($data);
+
+        return response()
+            ->redirectToRoute('login')
+            ->cookie('auth_token', $result['token'], 60 * 24)
+            ->with('success', 'Реєстрація успішна!');
     }
 
     public function login(Request $request)
     {
         $data = $request->only(['email', 'password']);
-        $this->userService->login($data);
-        $token = $request->cookie('jwt_token');
-        if ($token) {
-            return redirect()->route('admin')->withHeaders([
-                'Authorization' => 'Bearer ' . $token
-            ]);
+
+        $result = $this->userService->login($data);
+
+        if (isset($result['token'])) {
+            $role = $result['user']->role->name;
+            $redirectRoute = $role === 'Адміністратор' ? 'admin' : '/toms';
+    
+            return response()
+                ->redirectTo($redirectRoute)
+                ->cookie('auth_token', $result['token'], 60 * 24)
+                ->with('success', 'Вхід успішний!');
         }
     
-        return redirect()->route('login');
-    }
-
-    public function authenticate(Request $request)
-    {
-        $token = $request->bearerToken(); 
-        return $this->userService->authenticateUser($token);
+        return redirect()->back()->withErrors(['error' => 'Не вдалося увійти!'])->withInput();
     }
 
     public function logout(Request $request)
     {
-        return $this->userService->logout();
+        return $this->userService->logout()
+            ->cookie('auth_token', '', -1);
     }
 }
+

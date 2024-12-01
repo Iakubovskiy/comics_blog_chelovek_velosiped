@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container">
+<div class="container mt-5">
     <h1>Редагування замовлення #{{ $order->number }}</h1>
 
     @if ($errors->any())
-        <div class="alert alert-danger">
+        <div class="alert alert-danger mt-3">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -18,7 +18,7 @@
         @csrf
         @method('PUT')
 
-        <div class="form-group">
+        <div class="form-group mb-4">
             <label for="status">Статус</label>
             <select id="status" name="status" class="form-control">
                 @foreach (\App\Models\Order::getStatuses() as $status)
@@ -29,8 +29,8 @@
             </select>
         </div>
 
-        <h3>Товари</h3>
-        <table class="table">
+        <h3 class="mt-5">Товари</h3>
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Назва</th>
@@ -46,7 +46,7 @@
                         <td>
                             <input type="number" name="items[{{ $item->id }}][quantity]" class="form-control" value="{{ $item->pivot->quantity }}">
                         </td>
-                        <td>{{ $item->price }}</td>
+                        <td>{{ $item->price }} грн</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm remove-item" data-id="{{ $item->id }}">Видалити</button>
                         </td>
@@ -55,7 +55,7 @@
             </tbody>
         </table>
 
-        <div class="form-group">
+        <div class="form-group mb-4">
             <label for="add-tom">Додати товар</label>
             <select id="add-tom" class="form-control">
                 <option value="">-- Виберіть товар --</option>
@@ -84,4 +84,16 @@
                 </tr>
             `;
             document.getElementById('order-items').insertAdjacentHTML('beforeend', row);
-            this.value = 
+            this.value = '';  // Reset select field
+        }
+    });
+
+    // Remove item functionality
+    document.getElementById('order-items').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-item')) {
+            const row = e.target.closest('tr');
+            row.remove();
+        }
+    });
+</script>
+@endsection

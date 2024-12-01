@@ -1,0 +1,61 @@
+/* Загальні стилі */
+.bg-white {
+    background-color: #fff !important;
+}
+
+.rounded-lg {
+    border-radius: 8px !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Заголовки */
+h1 {
+    font-size: 2rem !important;
+    color: #333;
+    font-weight: bold !important;
+}
+
+/* Для списку замовлень */
+.list-group {
+    margin-top: 1.5rem !important;
+}
+
+.list-group-item {
+    border: 1px solid #ddd !important;
+    padding: 1.25rem 1rem !important;
+    margin-bottom: 1rem !important;
+    border-radius: 8px !important;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-teal-600 {
+    color: #3cbc3c !important;
+}
+
+.text-teal-800 {
+    color: #2b9e2b !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem !important;
+    }
+    .list-group-item {
+        flex-direction: column !important;
+    }
+}

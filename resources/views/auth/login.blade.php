@@ -30,7 +30,10 @@
             <label for="password">Пароль</label>
             <input type="password" name="password" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Увійти</button>
+        <br>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Увійти</button>
+        </div>
     </form>
 </div>
 @endsection

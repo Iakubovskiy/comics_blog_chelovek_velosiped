@@ -8,6 +8,7 @@ use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\TomController;
 use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -57,3 +58,6 @@ Route::controller(OrderController::class)->group(function(){
     Route::patch('orders/{id}','changeOrderStatus');
     Route::get('orders/{id}','calculateOrderTotal');
 });
+
+Route::post('/chat/send', [ChatController::class, 'sendMessageApi'])->middleware(['auth:sanctum']);
+Route::get('/chat/messages/{roomId}', [ChatController::class, 'getMessages']);

@@ -6,9 +6,12 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\TomController;
 use App\Http\Controllers\Auth\UserController;
-use App\Http\Middleware\AuthenticateWithJWT;
+use App\Http\Controllers\UserPart\CartController;
+use App\Http\Controllers\UserPart\OrderController as UserPartOrderController;
+use App\Http\Controllers\UserPart\PostController as UserPartPostController;
+use App\Http\Controllers\UserPart\TomController as UserPartTomController;
+use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Route;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,14 +47,14 @@ Route::prefix('admin')->group(function () {
 
     //Orders
     Route::get('orders', [OrderController::class, 'index'])->name('admin.orders.index');
-    Route::get('orders/create', [OrderController::class, 'create'])->name('admin.orders.create');
+    Route::get('orders/create', [OrderController::class, 'create'])->name(name: 'admin.orders.create');
     Route::post('orders', [OrderController::class, 'store'])->name('admin.orders.store');
     Route::get('orders/{id}/edit', [OrderController::class, 'edit'])->name('admin.orders.edit');
     Route::put('orders/{id}', [OrderController::class, 'update'])->name('admin.orders.update');
     Route::delete('orders/{id}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
 
     // admin    
-    Route::get('/', [AdminController::class, 'dashboard'])->name('admin')->middleware(middleware: AuthenticateWithJWT::class);
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin')->middleware('auth:sanctum');
 
 
 });
@@ -69,9 +72,33 @@ Route::prefix('auth')->group(function () {
 
     Route::post('/login', [UserController::class, 'login'])->name('login');
 });
-Route::get('authenticate', [UserController::class, 'authenticate'])->name('authenticate');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::view('/chat', 'chat.chat')->name('chat');
 });
+
+//Cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth:sanctum');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::put('/cart/update', [CartController::class, 'updateCart'])->name('cart.update')->middleware('auth:sanctum');
+Route::delete('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove')->middleware('auth:sanctum');
+Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear')->middleware('auth:sanctum');
+
+//Toms
+Route::get('/toms', [UserPartTomController::class, 'index'])->name('toms.index')->middleware('auth:sanctum');
+Route::get('/toms/{id}', [UserPartTomController::class, 'show'])->name('toms.show')->middleware('auth:sanctum');
+
+//Posts
+Route::get('/posts/{tomId}', [UserPartPostController::class, 'index'])->name('posts.index')->middleware('auth:sanctum');
+Route::get('/post/{id}', [UserPartPostController::class, 'show'])->name('posts.show')->middleware('auth:sanctum');
+
+//Orders
+Route::post('/orders', [UserPartOrderController::class, 'store'])->name('orders.store')->middleware('auth:sanctum');
+Route::get('/orders', [UserPartOrderController::class, 'index'])->name('orders.index')->middleware('auth:sanctum');
+Route::get('/orders/{order}', [UserPartOrderController::class, 'show'])->name('orders.show')->middleware('auth:sanctum');
+
+//Chat
+Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->middleware(['auth:sanctum']);
+Route::post('/chat/send', [App\Http\Controllers\ChatController::class, 'sendMessage'])->middleware(['auth:sanctum']);
+Route::get('/chat/messages/{roomId}', [App\Http\Controllers\ChatController::class, 'getMessages'])->middleware(['auth:sanctum']);

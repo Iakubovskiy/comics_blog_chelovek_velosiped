@@ -1,0 +1,54 @@
+.card {
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 10px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    color: #0007c7!important;
+}
+
+.card-text {
+    color: #666;
+}
+
+.primary-custom {
+    border-color: #0007c7!important;
+    color: #0007c7!important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0; 
+    padding: 0;
+}
+
+.primary-custom:hover {
+    background-color: #0007c7!important;
+    color: white!important;
+}
+
+.success-custom {
+    background-color: #3cbc3c!important; 
+    border-color: #3cbc3c!important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.success-custom:hover {
+    background-color: #01b400!important; 
+    border-color: #01b400!important;
+}
+
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.card-body {
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+.card-body:hover {
+    background-color: #f1f1f1;
+}

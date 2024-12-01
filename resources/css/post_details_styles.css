@@ -1,0 +1,103 @@
+/* Основні стилі для картинки в модалці */
+.carousel-item img {
+    object-fit: contain;
+    max-height: 100vh;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+.carousel-inner {
+    height: 100vh; 
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    transform: translateY(-50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.7); 
+}
+
+.carousel-control-prev {
+    left: 10px;
+}
+
+.carousel-control-next {
+    right: 10px;
+}
+
+.carousel-indicators li {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-indicators .active {
+    background-color: white;
+}
+
+.carousel-item img {
+    object-fit: contain;
+    height: 80vh; 
+    width: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+.carousel-inner {
+    height: 80vh; 
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    transform: translateY(-50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    box-shadow: none; 
+    transition: background-color 0.3s, transform 0.3s ease;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    color: black;
+    box-shadow: none; 
+    transform: scale(1.1);
+}
+
+.carousel-control-prev {
+    left: 10px;
+}
+
+.carousel-control-next {
+    right: 10px;
+}
+
+/* Стилі пагінації */
+.carousel-indicators li {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.carousel-indicators .active {
+    background-color: white;
+}

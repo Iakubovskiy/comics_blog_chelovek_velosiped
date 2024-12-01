@@ -25,6 +25,17 @@ class OrderService
         return $this->orderRepository->getById($id);
     }
 
+    public function getUserOrders(int $user_id): Collection
+    {
+        $orders = $this->orderRepository->getAll();
+
+        $filtered_orders = $orders->filter(function ($order) use ($user_id) {
+            return $order->user_id === $user_id;
+        });
+
+        return $filtered_orders;
+    }
+
     public function createOrder(array $data): Order
     {
         if (!isset($data['status'])) 
